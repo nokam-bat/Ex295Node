@@ -35,12 +35,14 @@ routerActivities.get('/activities/:id', (req, res) => {
 routerActivities.delete('/activities/:id', (req, res) => {
     const id = parseInt(req.params.id); // req.params.id nous permets de connaître l'id à chercher.
     const activityIdIndex = activities.findIndex(activity => activity.id === id); //rappel que parseInt aura changé id en int.
-    // activityIdIndex c'est la variable où on va mettre la position de l'id de l'activité qui se trouve dans le tableau qu'on cherche.
+    // activityIdIndex c'est la variable où on va mettre la position de l'id/ l'objet/ l'activité qui se trouve dans le tableau qu'on cherche.
+    // on utilise id pour activityIDIndex car dans le tableau, id correspond à la valeur unique de l'objet dans le tableau.
+    // l'index c'est sa position dans le tableau
     // là on utilise .findIndex() pour trouver la position et pas .find()
     // .findIndex() permets de trouver/ renvoyer la position numérique de l'objet das le tableau.
     // .find() permets de trouver/ renvoyer l'objet complet ( ex: {id: 1, name: 'Natation'})
     // là on va avoir besoin de .splice() pour supprimer l'objet du tableau.
-    // pour rappel, .splice(quel id supprimer, combien supprimer) a besoin de savoir quel élément supprimer et combien d'éléments à supprimer.
+    // pour rappel, .splice(quel  (id est le terme ici)/position supprimer, combien d'élément à supprimer) a besoin de savoir quel élément supprimer et combien d'éléments à supprimer.
     // donc on lui précise la position et de combien on supprime dans ses paramètres.
     // Avant de splice,faut vérifier/ prévenir les erreurs si la position de l'id existe pas
     // Pour ça on utilise des conditions et on vérifie si activityIdIndex se trouve dans la liste ou pas
