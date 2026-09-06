@@ -3,7 +3,12 @@ import activitiesRouter from './routes/activities.js';
 //activitiesRouter c'est le nom de la variable que j'ai choisi
 
 const app = express();
-const port = 3000;
+// chercher .env ou 3000
+const port = process.env.PORT || 3000;
+
+// Middlewear pour traduire du json en objet
+// utile pour les POST/PUT
+app.use(express.json());
 
 // route de base
 app.get('/', (req, res) => {
