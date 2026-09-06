@@ -65,5 +65,7 @@ routerActivities.delete('/activities/:id', (req, res) => {
 
 
 
+
+
 export default routerActivities;
 
