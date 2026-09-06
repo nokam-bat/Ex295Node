@@ -2,7 +2,7 @@ import express from 'express'; //on a besoin de express pour appeler la fonction
 import activities from '../db/mock-activities.js'; // <- Elle va ici maintenant !
 
 const routerActivities= express.Router(); //cette fonction permets de créer un sous-routeur
-
+// pour info on va aussi faire des opérations CRUD (Create, Read, Update, Delete)
 
 // 1. Route pour récupérer toutes les activités
 routerActivities.get('/activities', (req, res) => {
@@ -66,6 +66,10 @@ routerActivities.post('/activities', (req, res) => {
 
     // 0. Sécurité: Vérifier que le client a bien envoyé un nom (sinon erreur 400 Bad Request)
     if (!req.body.name){
+        // Que fait req.body.name?
+        // Il évalue si la propriété name est manquante (si elle vaut undefined, null ou un string vide "").
+        // ! l'inverse pour le mettre en false si il était true et true s'il était false
+        // en gros! raccourci une ligne de code chiante de conditions
         return res.status(400).json({message: "Le nom de l'activité est obligatoire."});
         //on mets return car on est dans un if et on veut interrompre et stopper la fonction directe si les données sont mauvaises.
     }
@@ -97,7 +101,36 @@ routerActivities.post('/activities', (req, res) => {
     // La convention REST (API_REST) impose le code 201 Created quand on utilise une méthode POST
 })
 
+// 5. Route PUT: Mettre à jour une activité existante par son ID
+// Mise à jour totale = PUT
+// Mise à jour partielle = PATCH
+routerActivities.put('/activities/:id', (req, res) => {
+    //1. Récupérer l'id dans l'URL et le convertir en nombre entier
+    const id = parseInt(req.params.id);
 
+    //2. Chercher la position (l'index) de l'activité dans le tableau activities
+    const activityIndex = activities.findIndex(activity => activity.id === id);
+
+    //3. Sécurité: Vérifier si l'activité existe, sinon erreur 404 Not Found
+    if (activityIndex === -1){  //si elle existe pas, on donne le msg et on stop.
+        return res.status(404).json({message: `L'activité demandée n'a pas été trouvée.`});
+    }
+
+    //4. Mettre à jour l'activité en ccombinant l'ancien objet et les nouvelles données du client req.body
+    // on force l'id é rester le même pour éviter qu'il soit écrasé ou modifié
+    const updatedActivity = { ...activities[activityIndex], ...req.body, id};
+    // Les anciennes données: ...activities[activityIndex]
+    // Les modifications du client: ...req.body (ce qu'il a changé va écrasé les anciennes données correspondantes)
+    // le vérouillage de sécurité de l'id: id   ça empêchera le client de changer l'id s'il essaie
+    // On remplace l'ancienne activité par la nouvelle dans le tableau mock-activities
+    activities[activityIndex] = updatedActivity;
+
+    //5. Renvoyer un message de succès et le statut HTTP 200 OK
+    const message = `L'activité ${updatedActivity.name} a bien été mise à jour`;
+    res.json({message, data: updatedActivity});
+
+
+})
 
 
 
