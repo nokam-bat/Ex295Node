@@ -31,7 +31,7 @@ routerActivities.get('/activities/:id', (req, res) => {
 });
 
 
-// 3. Route pour supprimer une activité donnée
+// 3. Route pour supprimer une activité donnée (DELETE)
 routerActivities.delete('/activities/:id', (req, res) => {
     const id = parseInt(req.params.id); // req.params.id nous permets de connaître l'id à chercher.
     const activityIdIndex = activities.findIndex(activity => activity.id === id); //rappel que parseInt aura changé id en int.
@@ -60,8 +60,42 @@ routerActivities.delete('/activities/:id', (req, res) => {
     }
 })
 
+// 4. Route pour Ajouter une activité donnée par le client (POST)
+routerActivities.post('/activities', (req, res) => {
+        // Comme on utilise POST pour créer une activité, on mets pas /activities/:id étant donné que l'id existe pas encore
 
+    // 0. Sécurité: Vérifier que le client a bien envoyé un nom (sinon erreur 400 Bad Request)
+    if (!req.body.name){
+        return res.status(400).json({message: "Le nom de l'activité est obligatoire."});
+        //on mets return car on est dans un if et on veut interrompre et stopper la fonction directe si les données sont mauvaises.
+    }
 
+    // 1. Caculer le nouvel ID automatiquement en cherchant le max des id existants
+    const ids =activities.map(activity => activity.id);     // la constante ids est la liste/ le tableau de tous les ID actuels.
+    // ids est la variable où on va stocker le nouveau tableau de chiffres crée par .map() qui va contenir tous les id disponible.
+    // .map() est une fonction native de JS qui appartient aux tableaux.
+    // Elle parcourt un tableau pour en recréer un autre exclusivement en chiffres.
+    // ici elle prends la liste d'objet d'activités et transorme tous les id en chiffres. Ex: [1,2,3,7]
+    const maxId = Math.max(...ids);     // Math est la boite à outil JS pour les maths.
+    // .max() a BESOIN des trois petits points ... pour lire le tableau ids
+    // .max() va trouver l'id le plus grand et en dessous on va rajouter 1
+    const id = maxId + 1;    // on rajoute 1 chiffre au nombre maximum vu qu'on créer un new objet.
+
+    //2. Créer le nouvel objet en combinant le nouvel id et les données envoyées par le client (req.body)
+    const newActivity = {id, ...req.body};  // la variable id a le même nom que la propriété de l'objet que je veux créer (dans le tableau on a id comme clé pour la première clé-valeur)
+    // donc écrire id ici revient à écrire id:id  (rappel qu'on a calculé l'id en rajoutant 1 au maxId)
+    // on sépare  les propriétés de l'objet en cours de fabrication avec les virgules
+    // ...req.body c'est ce qui contient toutes les données que le client a tapées au format JSON.
+    // les trois petits points... permettent de déballer/ copier toutes les propriétés une à une pour les injecter dans le nouvel objet.
+
+    //3. Ajouter l'élement dans le tableau mock (dans mon fichier mock-activties.js)
+    activities.push(newActivity);
+
+    //4. Renvoyer un message de succès et le statut HTTP 201 (Created)
+    const message = `L'activité ${newActivity.name} a bien été créee.`;
+    res.status(201).json({message, data: newActivity});
+    // La convention REST (API_REST) impose le code 201 Created quand on utilise une méthode POST
+})
 
 
 

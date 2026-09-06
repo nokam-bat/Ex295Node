@@ -1,6 +1,6 @@
 import express from 'express';
-import activitiesRouter from './routes/activities.js';
-//activitiesRouter c'est le nom de la variable que j'ai choisi
+import routerActivities from './routes/activities.js';
+//routerActivities c'est le nom de la variable que j'ai choisi, elle correspond à ce que j'ai exporté dans activities.js
 
 const app = express();
 // chercher .env ou 3000
@@ -21,8 +21,8 @@ app.get('/api', (req, res) =>{
 });
 
 // Utilisation du routeur pour toutes les routes de l'API concenant les activités
-app.use('/api', activitiesRouter);
+app.use('/api', routerActivities);
 
 app.listen(port, () => {
-    console.log(`Serveur en écoute sur http://localhost: ${port}`);
+    console.log(`Serveur en écoute sur http://localhost:${port}`);
 });
