@@ -1,3 +1,8 @@
+// [] c'est un tableau
+// {} c'est un objet dans le tableau
+// id c'est une clé
+// 1 c'est une valeur d'une clé
+
 const activities = [
     {
         id: 1,
@@ -5,6 +10,10 @@ const activities = [
         startDate: "2026-05-15",
         duration: "2 heures"
     },
+
+    // on pourrait aussi écrire le premier objet sur une ligne:
+    // {id: 1, name: "Atelier Robotique Pepper", startDate: "2026-05-15", duration: "2 heures"},
+
     {
         id: 2,
         name: "Conférence Cybersécurité",
@@ -21,3 +30,4 @@ const activities = [
 
 export default activities;
 // ça permet de rendre le tableau activities accessible depuis les autres fichiers de mon projet
+
